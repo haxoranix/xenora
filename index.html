@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xenora Chronicles | Sci-Fi Author</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Exo+2:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        xenora: {
+                            primary: '#6b21a8',
+                            secondary: '#0d9488',
+                            accent: '#10b981',
+                            dark: '#0f172a',
+                            light: '#e0f2fe',
+                        }
+                    },
+                    fontFamily: {
+                        orbitron: ['Orbitron', 'sans-serif'],
+                        exo: ['Exo 2', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background: radial-gradient(ellipse at center, #0f172a 0%, #020617 70%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: #e0f2fe;
+            font-family: 'Exo 2', sans-serif;
+        }
+        
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .star {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            animation: twinkle var(--duration, 5s) infinite ease-in-out;
+            opacity: 0;
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+        
+        .xenora-planet {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #10b981, #0d9488, #6b21a8);
+            box-shadow: 
+                0 0 60px rgba(107, 33, 168, 0.7),
+                0 0 120px rgba(13, 148, 136, 0.5),
+                inset 0 0 50px rgba(0, 0, 0, 0.8);
+            overflow: hidden;
+        }
+        
+        .planet-detail {
+            position: absolute;
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 50%;
+        }
+        
+        .pulse {
+            animation: pulse 3s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(107, 33, 168, 0.7); }
+            70% { box-shadow: 0 0 0 20px rgba(107, 33, 168, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(107, 33, 168, 0); }
+        }
+        
+        .book-cover {
+            transition: all 0.3s ease;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+        
+        .book-cover:hover {
+            transform: translateY(-10px) rotateX(5deg);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+        }
+        
+        .alien-ship {
+            position: absolute;
+            width: 80px;
+            height: 30px;
+            background: linear-gradient(90deg, #6b21a8, #0d9488);
+            border-radius: 50% 50% 0 0;
+            animation: float 15s infinite linear;
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.7);
+            z-index: 10;
+        }
+        
+        .alien-ship::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 20px;
+            background-color: #10b981;
+            border-radius: 50%;
+            box-shadow: 0 0 15px #10b981;
+        }
+        
+        @keyframes float {
+            0% { transform: translateX(-100px) translateY(50px); }
+            100% { transform: translateX(calc(100vw + 100px)) translateY(150px); }
+        }
+        
+        .alien-ship:nth-child(2) {
+            width: 50px;
+            height: 20px;
+            animation: float 12s 5s infinite linear;
+            top: 30%;
+        }
+        
+        .alien-ship:nth-child(3) {
+            width: 40px;
+            height: 15px;
+            animation: float 8s 3s infinite linear;
+            top: 70%;
+        }
+        
+        .hologram {
+            position: relative;
+            border: 1px solid rgba(16, 185, 129, 0.5);
+            box-shadow: 
+                0 0 15px rgba(16, 185, 129, 0.3),
+                inset 0 0 15px rgba(16, 185, 129, 0.2);
+            background: rgba(15, 23, 42, 0.7);
+        }
+        
+        .hologram::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #6b21a8, #0d9488, #10b981, #0d9488, #6b21a8);
+            background-size: 400%;
+            z-index: -1;
+            animation: hologram-glow 3s linear infinite;
+            border-radius: inherit;
+        }
+        
+        @keyframes hologram-glow {
+            0% { background-position: 0 0; filter: blur(5px); opacity: 0.7; }
+            50% { background-position: 100% 0; filter: blur(8px); opacity: 1; }
+            100% { background-position: 0 0; filter: blur(5px); opacity: 0.7; }
+        }
+        
+        .nav-link::after {
+            content: '';
+            display: block;
+            width: 0;
+            height: 2px;
+            background: #10b981;
+            transition: width 0.3s;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+    </style>
+</head>
+<body class="relative">
+    <!-- Background elements -->
+    <div class="stars"></div>
+    <div class="alien-ship"></div>
+    <div class="alien-ship"></div>
+    <div class="alien-ship"></div>
+    
+    <!-- Header -->
+    <header class="relative z-20 py-6 px-4 sm:px-8 lg:px-16">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center">
+                <div class="w-12 h-12 rounded-full bg-xenora-primary flex items-center justify-center mr-3 pulse">
+                    <i class="fas fa-infinity text-xl text-xenora-accent"></i>
+                </div>
+                <h1 class="font-orbitron text-2xl md:text-3xl font-bold tracking-wider">
+                    <span class="text-xenora-accent">XENORA</span> CHRONICLES
+                </h1>
+            </div>
+            
+            <nav class="hidden md:block">
+                <ul class="flex space-x-8">
+                    <li><a href="#" class="nav-link font-orbitron text-xenora-light hover:text-xenora-accent transition">HOME</a></li>
+                    <li><a href="#" class="nav-link font-orbitron text-xenora-light hover:text-xenora-accent transition">BOOKS</a></li>
+                    <li><a href="#" class="nav-link font-orbitron text-xenora-light hover:text-xenora-accent transition">AUTHOR</a></li>
+                    <li><a href="#" class="nav-link font-orbitron text-xenora-light hover:text-xenora-accent transition">BLOG</a></li>
+                    <li><a href="#" class="nav-link font-orbitron text-xenora-light hover:text-xenora-accent transition">CONTACT</a></li>
+                </ul>
+            </nav>
+            
+            <button class="md:hidden text-2xl text-xenora-light">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative z-10 py-16 md:py-24 px-4 sm:px-8 lg:px-16">
+        <div class="container mx-auto flex flex-col md:flex-row items-center">
+            <div class="md:w-1/2 mb-12 md:mb-0">
+                <h2 class="font-orbitron text-4xl md:text-6xl font-bold mb-6">
+                    JOURNEY TO <span class="text-xenora-accent">XENORA</span>
+                </h2>
+                <p class="text-xl mb-8 leading-relaxed max-w-xl">
+                    Where alien civilizations thrive in harmony with cosmic energies. Explore the rich tapestry of life on a planet where the impossible becomes reality.
+                </p>
+                <div class="flex space-x-4">
+                    <button class="px-8 py-3 bg-xenora-primary hover:bg-purple-900 rounded-full font-orbitron text-lg transition-all transform hover:scale-105">
+                        EXPLORE BOOKS
+                    </button>
+                    <button class="px-8 py-3 border-2 border-xenora-secondary hover:bg-teal-900 rounded-full font-orbitron text-lg transition-all transform hover:scale-105">
+                        MEET THE AUTHOR
+                    </button>
+                </div>
+            </div>
+            
+            <div class="md:w-1/2 flex justify-center">
+                <div class="xenora-planet relative">
+                    <div class="planet-detail" style="width: 80px; height: 80px; top: 20%; left: 15%;"></div>
+                    <div class="planet-detail" style="width: 50px; height: 50px; top: 40%; left: 70%;"></div>
+                    <div class="planet-detail" style="width: 100px; height: 100px; top: 60%; left: 40%;"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Books -->
+    <section class="py-20 px-4 sm:px-8 lg:px-16">
+        <div class="container mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="font-orbitron text-3xl md:text-4xl font-bold mb-4">
+                    <span class="text-xenora-accent">COSMIC</span> SAGA SERIES
+                </h2>
+                <div class="w-24 h-1 bg-xenora-accent mx-auto mb-6"></div>
+                <p class="max-w-2xl mx-auto text-lg">
+                    Dive into the award-winning series that has captivated millions across the galaxy
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+                <!-- Book 1 -->
+                <div class="hologram rounded-xl p-6 transform transition duration-500 hover:scale-105">
+                    <div class="book-cover mb-6 rounded-lg overflow-hidden shadow-xl">
+                        <div class="bg-gradient-to-r from-xenora-primary to-xenora-secondary h-64 flex items-center justify-center">
+                            <div class="text-center p-4">
+                                <h3 class="font-orbitron text-2xl font-bold">DAWN OF XENORA</h3>
+                                <div class="w-16 h-1 bg-xenora-accent mx-auto my-3"></div>
+                                <p class="text-sm">Book One</p>
+                            </div>
+                        </div>
+                    </div>
+                    <h3 class="font-orbitron text-xl font-bold mb-2">Dawn of Xenora</h3>
+                    <p class="mb-4">The discovery of Xenora changes humanity's place in the universe forever.</p>
+                    <button class="w-full py-2 bg-xenora-secondary hover:bg-teal-800 rounded-lg font-orbitron transition">
+                        READ EXCERPT <i class="ml-2 fas fa-arrow-right"></i>
+                    </button>
+                </div>
+                
+                <!-- Book 2 -->
+                <div class="hologram rounded-xl p-6 transform transition duration-500 hover:scale-105">
+                    <div class="book-cover mb-6 rounded-lg overflow-hidden shadow-xl">
+                        <div class="bg-gradient-to-r from-xenora-secondary to-xenora-accent h-64 flex items-center justify-center">
+                            <div class="text-center p-4">
+                                <h3 class="font-orbitron text-2xl font-bold">ECHOES OF THE VOID</h3>
+                                <div class="w-16 h-1 bg-xenora-primary mx-auto my-3"></div>
+                                <p class="text-sm">Book Two</p>
+                            </div>
+                        </div>
+                    </div>
+                    <h3 class="font-orbitron text-xl font-bold mb-2">Echoes of the Void</h3>
+                    <p class="mb-4">Ancient secrets emerge as Xenora's true purpose is revealed.</p>
+                    <button class="w-full py-2 bg-xenora-secondary hover:bg-teal-800 rounded-lg font-orbitron transition">
+                        READ EXCERPT <i class="ml-2 fas fa-arrow-right"></i>
+                    </button>
+                </div>
+                
+                <!-- Book 3 -->
+                <div class="hologram rounded-xl p-6 transform transition duration-500 hover:scale-105">
+                    <div class="book-cover mb-6 rounded-lg overflow-hidden shadow-xl">
+                        <div class="bg-gradient-to-r from-xenora-accent to-xenora-primary h-64 flex items-center justify-center">
+                            <div class="text-center p-4">
+                                <h3 class="font-orbitron text-2xl font-bold">CONVERGENCE</h3>
+                                <div class="w-16 h-1 bg-xenora-secondary mx-auto my-3"></div>
+                                <p class="text-sm">Book Three</p>
+                            </div>
+                        </div>
+                    </div>
+                    <h3 class="font-orbitron text-xl font-bold mb-2">Convergence</h3>
+                    <p class="mb-4">The fate of two civilizations hangs in the balance as ancient powers awaken.</p>
+                    <button class="w-full py-2 bg-xenora-secondary hover:bg-teal-800 rounded-lg font-orbitron transition">
+                        READ EXCERPT <i class="ml-2 fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Author Bio -->
+    <section class="py-20 px-4 sm:px-8 lg:px-16">
+        <div class="container mx-auto">
+            <div class="flex flex-col lg:flex-row items-center">
+                <div class="lg:w-2/5 mb-12 lg:mb-0 flex justify-center">
+                    <div class="relative">
+                        <div class="h-80 w-64 bg-gradient-to-br from-xenora-primary to-xenora-secondary rounded-xl shadow-2xl overflow-hidden">
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <i class="fas fa-user-astronaut text-8xl opacity-30"></i>
+                            </div>
+                        </div>
+                        <div class="absolute -bottom-6 -right-6 bg-xenora-accent w-16 h-16 rounded-full flex items-center justify-center">
+                            <i class="fas fa-pen-nib text-2xl"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="lg:w-3/5 lg:pl-16">
+                    <h2 class="font-orbitron text-3xl md:text-4xl font-bold mb-6">
+                        ABOUT THE <span class="text-xenora-accent">AUTHOR</span>
+                    </h2>
+                    
+                    <div class="mb-6">
+                        <p class="mb-4 text-lg">
+                            Dr. Aris Thorne is an exo-anthropologist and award-winning author whose work explores the intersection of alien civilizations and human consciousness.
+                        </p>
+                        <p class="mb-4">
+                            With a background in astrophysics and cultural anthropology, Dr. Thorne brings a unique perspective to science fiction, creating worlds that feel both scientifically plausible and culturally rich.
+                        </p>
+                        <p>
+                            When not writing, Dr. Thorne serves as a consultant to space agencies and participates in SETI research initiatives.
+                        </p>
+                    </div>
+                    
+                    <div class="flex flex-wrap gap-4">
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 rounded-full bg-xenora-primary flex items-center justify-center mr-3">
+                                <i class="fas fa-award text-xl text-xenora-accent"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-orbitron">Awards</h4>
+                                <p class="text-sm">12 Galactic Literary Awards</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 rounded-full bg-xenora-primary flex items-center justify-center mr-3">
+                                <i class="fas fa-book text-xl text-xenora-accent"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-orbitron">Published</h4>
+                                <p class="text-sm">8 Novels, 3 Short Stories</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter -->
+    <section class="py-20 px-4 sm:px-8 lg:px-16">
+        <div class="container mx-auto max-w-4xl">
+            <div class="hologram rounded-2xl p-8 md:p-12 text-center">
+                <h2 class="font-orbitron text-3xl md:text-4xl font-bold mb-4">
+                    JOIN THE <span class="text-xenora-accent">COSMIC CIRCLE</span>
+                </h2>
+                <p class="mb-8 max-w-2xl mx-auto">
+                    Get exclusive content, behind-the-scenes insights, and early access to new releases. Plus a free short story set in the Xenora universe!
+                </p>
+                
+                <div class="flex flex-col sm:flex-row gap-4 max-w-xl mx-auto">
+                    <input 
+                        type="email" 
+                        placeholder="Enter your email address" 
+                        class="flex-grow px-6 py-3 bg-xenora-dark border border-xenora-secondary rounded-full focus:outline-none focus:ring-2 focus:ring-xenora-accent"
+                    >
+                    <button class="px-8 py-3 bg-xenora-accent hover:bg-emerald-600 rounded-full font-orbitron transition whitespace-nowrap">
+                        SUBSCRIBE NOW
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="pt-16 pb-8 px-4 sm:px-8 lg:px-16 border-t border-xenora-secondary">
+        <div class="container mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                <div>
+                    <h3 class="font-orbitron text-xl font-bold mb-4">XENORA CHRONICLES</h3>
+                    <p class="mb-4">
+                        Exploring the rich universe of Xenora and its alien civilizations through award-winning science fiction.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-2xl text-xenora-light hover:text-xenora-accent transition"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="text-2xl text-xenora-light hover:text-xenora-accent transition"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-2xl text-xenora-light hover:text-xenora-accent transition"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-2xl text-xenora-light hover:text-xenora-accent transition"><i class="fab fa-goodreads"></i></a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="font-orbitron text-xl font-bold mb-4">EXPLORE</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="hover:text-xenora-accent transition">Home</a></li>
+                        <li><a href="#" class="hover:text-xenora-accent transition">Books</a></li>
+                        <li><a href="#" class="hover:text-xenora-accent transition">Author</a></li>
+                        <li><a href="#" class="hover:text-xenora-accent transition">Blog</a></li>
+                        <li><a href="#" class="hover:text-xenora-accent transition">Events</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="font-orbitron text-xl font-bold mb-4">SERIES</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="hover:text-xenora-accent transition">Xenora Saga</a></li>
+                        <li><a href="#" class="hover:text-xenora-accent transition">Void Trilogy</a></li>
+                        <li><a href="#" class="hover:text-xenora-accent transition">Celestial Short Stories</a></li>
+                        <li><a href="#" class="hover:text-xenora-accent transition">Anthologies</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="font-orbitron text-xl font-bold mb-4">CONTACT</h3>
+                    <ul class="space-y-2">
+                        <li class="flex items-start">
+                            <i class="fas fa-envelope mt-1 mr-3 text-xenora-accent"></i>
+                            <span>contact@xenora-chronicles.com</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-globe-americas mt-1 mr-3 text-xenora-accent"></i>
+                            <span>www.xenora-chronicles.com</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-map-marker-alt mt-1 mr-3 text-xenora-accent"></i>
+                            <span>Orion Arm, Milky Way</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="pt-8 border-t border-xenora-secondary text-center">
+                <p>
+                    &copy; 2025 Xenora Chronicles. All rights reserved across known galaxies.
+                    <br>
+                    <span class="text-xenora-accent">Designed By HaxorAnix | MyAuthorWeb.Site</span>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Create stars in background
+        function createStars() {
+            const starsContainer = document.querySelector('.stars');
+            const starCount = 200;
+            
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                
+                // Random position
+                const x = Math.random() * 100;
+                const y = Math.random() * 100;
+                star.style.left = `${x}%`;
+                star.style.top = `${y}%`;
+                
+                // Random size
+                const size = Math.random() * 3;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                
+                // Random animation
+                const duration = 2 + Math.random() * 8;
+                const delay = Math.random() * 5;
+                star.style.setProperty('--duration', `${duration}s`);
+                star.style.animationDelay = `${delay}s`;
+                
+                starsContainer.appendChild(star);
+            }
+        }
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            createStars();
+            
+            // Add hover effect to buttons
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(button => {
+                button.addEventListener('mousemove', e => {
+                    const rect = button.getBoundingClientRect();
+                    const x = (e.clientX - rect.left) / rect.width;
+                    const y = (e.clientY - rect.top) / rect.height;
+                    
+                    button.style.setProperty('--x', x);
+                    button.style.setProperty('--y', y);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
